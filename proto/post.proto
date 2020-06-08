@@ -1,0 +1,140 @@
+syntax = "proto3";
+package post;
+
+import "google/api/annotations.proto";
+
+message Post {
+  int32 id    = 1;
+  string title = 2;
+  string content = 3;
+  string photoUrl =5;
+  int32 userId = 6;
+  int32 likes = 7;
+}
+
+message GetPostRequest {
+  int32 id = 1;
+}
+
+message GetPostResponse {
+  Post post = 1;
+}
+
+message GetPostsRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+  int32 id = 3;
+  string title = 4; 
+}
+
+message GetPostsResponse {
+  repeated Post posts = 1;
+  int32 count = 2;
+}
+
+message CreatePostRequest {
+  string title = 1;
+  string content= 2;
+  string photoUrl =3;
+  int32 userId = 4;
+}
+
+message CreatePostResponse {
+  int32 id = 1;
+}
+
+message UpdatePostRequest {
+  int32 id = 1;
+  string title = 2;
+  string content= 3;
+  string photoUrl =4;
+}
+
+message UpdatePostResponse {
+  int32 id = 1;
+}
+
+message DeletePostRequest {
+  int32 id = 1;
+  int32 userId = 2;
+}
+
+message DeletePostResponse {
+  int32 id = 1;
+}
+
+message CreateLikeRequest {
+  int32 userId = 1;
+  int32 postId = 2;
+}
+
+message CreateLikeResponse {
+  int32 id = 1;
+  int32 count =2;
+}
+
+message DeleteLikeRequest {
+  int32 id = 1;
+}
+
+message DeleteLikeResponse {
+  int32 id = 1;
+  int32 count =2;
+}
+
+message CheckLikedRequest {
+  int32 userId = 1;
+  int32 postId = 2;
+}
+
+message CheckLikedResponse {
+  int32 id = 1;
+  bool liked =2;
+}
+
+service PostService {
+  rpc GetPost(GetPostRequest) returns (GetPostResponse) {
+    option (google.api.http) = {
+      get: "/v1/posts/{id}" 
+    };
+  }
+  rpc GetPosts(GetPostsRequest) returns (GetPostsResponse) {
+    option (google.api.http) = {
+      get: "/v1/posts" 
+    };
+  }
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse) {
+    option (google.api.http) = {
+      post: "/v1/posts"
+      body: "*"
+    };
+  }
+  rpc UpdatePost(UpdatePostRequest) returns (UpdatePostResponse) {
+    option (google.api.http) = {
+      put: "/v1/posts/{id}"
+      body: "*"
+    };
+  }
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse) {
+    option (google.api.http) = {
+      delete: "/v1/posts/{id}/user/{userId}"
+    };
+  }
+  rpc CreateLike(CreateLikeRequest) returns (CreateLikeResponse) {
+    option (google.api.http) = {
+      post: "/v1/likes"
+      body: "*"
+    };
+  }
+  rpc DeleteLike(DeleteLikeRequest) returns (DeleteLikeResponse) {
+    option (google.api.http) = {
+      delete: "/v1/likes/{id}"
+    };
+  }
+  rpc CheckLiked(CheckLikedRequest) returns (CheckLikedResponse) {
+    option (google.api.http) = {
+      get: "/v1/likes/{userId}/{postId}" 
+    };
+  }
+}
+

@@ -1,0 +1,96 @@
+syntax = "proto3";
+package user;
+
+import "google/api/annotations.proto";
+
+message User {
+  int32 id    = 1;
+  string name = 2;
+  string email= 3;
+  string photoUrl =4;
+}
+
+message GetUserRequest {
+  int32 id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message GetUsersRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+  int32 id = 3;
+  string name = 4; 
+}
+
+message GetUsersResponse {
+  repeated User users = 1;
+}
+
+message LoginRequest {
+  string email= 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  int32 id = 1;
+  string token = 2;
+}
+
+message CreateUserRequest {
+  string name = 1;
+  string email= 2;
+  string photoUrl =3;
+  string password = 4;
+}
+
+message CreateUserResponse {
+  int32 id = 1;
+  string token = 2;
+}
+
+message UpdateUserRequest {
+  int32 id = 1;
+  string name = 2;
+  string email = 3;
+  string photo_url = 4;
+}
+
+message UpdateUserResponse {
+  int32 id = 1;
+}
+
+service UserService {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/{id}" 
+    };
+  }
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {
+    option (google.api.http) = {
+      get: "/v1/users" 
+    };
+  }
+  rpc Login(LoginRequest) returns (LoginResponse) {
+    
+    option (google.api.http) = {
+      post: "/v1/login" 
+      body: "*"
+    };
+  }
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    option (google.api.http) = {
+      post: "/v1/users"
+      body: "*"
+    };
+  }
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/v1/users/{id}"
+      body: "*"
+    };
+  }
+}
+
