@@ -10,6 +10,14 @@ message User {
   string photoUrl =4;
 }
 
+message Comment {
+  int32 id    = 1;
+  string name = 2;
+  string photoUrl= 3;
+  string content = 4;
+  int32 userId = 5;
+}
+
 message GetUserRequest {
   int32 id = 1;
 }
@@ -55,11 +63,32 @@ message UpdateUserRequest {
   int32 id = 1;
   string name = 2;
   string email = 3;
-  string photo_url = 4;
+  string photoUrl = 4;
 }
 
 message UpdateUserResponse {
   int32 id = 1;
+}
+
+message CreateCommentRequest {
+  int32  postId = 1;
+  int32  userId = 2;
+  string content = 3;
+}
+
+message CreateCommentResponse {
+  int32  id = 1;
+}
+
+message GetCommentsRequest {
+  int32 postId = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message GetCommentsResponse {
+  repeated Comment comments = 1;
+  int32    count = 2;
 }
 
 service UserService {
@@ -92,5 +121,15 @@ service UserService {
       body: "*"
     };
   }
+  rpc CreateComment(CreateCommentRequest) returns (CreateCommentResponse) {
+    option (google.api.http) = {
+      post: "/v1/posts/{postId}/comments"
+      body: "*"
+    };
+  }
+  rpc GetComments(GetCommentsRequest) returns (GetCommentsResponse) {
+    option (google.api.http) = {
+      get: "/v1/posts/{postId}/comments" 
+    };
+  }
 }
-
